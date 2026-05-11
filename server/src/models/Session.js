@@ -1,18 +1,15 @@
 const mongoose = require('mongoose');
 
-const sessionSchema = new mongoose.Schema(
-  {
-    sessionId: { type: String, required: true, unique: true },
-    peerA: { type: String }, // socket ID
-    peerB: { type: String }, // socket ID
-    startedAt: { type: Date, default: Date.now },
-    endedAt: { type: Date },
-    durationSeconds: { type: Number },
-    consentA: { type: Boolean, default: false },
-    consentB: { type: Boolean, default: false },
-    recordingRequested: { type: Boolean, default: false },
-  },
-  { timestamps: true }
-);
+const SessionSchema = new mongoose.Schema({
+  userId: { type: String, required: true },
+  socketId: { type: String, required: true },
+  connectedAt: { type: Date, default: Date.now },
+  disconnectedAt: { type: Date },
+  consent: { type: Boolean, default: false },
+  metadata: {
+    ip: String,
+    userAgent: String
+  }
+}, { timestamps: true });
 
-module.exports = mongoose.model('Session', sessionSchema);
+module.exports = mongoose.model('Session', SessionSchema);
