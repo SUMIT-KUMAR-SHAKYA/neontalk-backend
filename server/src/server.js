@@ -1,10 +1,19 @@
 require('dotenv').config();
+const http = require('http');
+const { Server } = require('socket.io');
+
+// 1. Ensure 'app' is imported correctly
+const { app, allowedOrigins } = require('./app');
+const connectDB = require('./config/db');
+const initializeSocket = require('./socket/index');
 const mongoose = require('mongoose');
-const Session = require('./models/Session'); // Import model
+const Session = require('./models/Session');
 
-// ... aapka purana server setup code ...
+const server = http.createServer(app);
 
-// ─── Health Check with DB Status ─────────────────────────────
+// ... baaki socket config ...
+
+// 2. Health Route (Ab 'app' define ho chuka hai upar)
 app.get('/health', (req, res) => {
   res.status(200).json({
     status: "ok",
@@ -13,24 +22,18 @@ app.get('/health', (req, res) => {
   });
 });
 
-// ─── DB Connection Test Route ────────────────────────────────
+// 3. Test DB Route
 app.get("/test-db", async (req, res) => {
   try {
     const testEntry = await Session.create({
       userId: "test_user_sumit",
       socketId: "test_socket_123",
-      consent: true,
-      metadata: {
-        ip: req.ip,
-        userAgent: req.headers['user-agent']
-      }
+      consent: true
     });
-    res.json({
-      success: true,
-      message: "Database entry created!",
-      data: testEntry
-    });
+    res.json({ success: true, data: testEntry });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
 });
+
+// ... baaki server.listen code ...
