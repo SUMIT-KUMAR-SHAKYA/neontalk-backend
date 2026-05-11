@@ -1,19 +1,25 @@
-require('dotenv').config();
+ require('dotenv').config();
 const http = require('http');
 const { Server } = require('socket.io');
+const mongoose = require('mongoose');
 
-// 1. Ensure 'app' is imported correctly
-const { app, allowedOrigins } = require('./app');
+// Paths check karo: Kya app.js aur models sahi jagah hain?
+const { app, allowedOrigins } = require('./app'); 
 const connectDB = require('./config/db');
 const initializeSocket = require('./socket/index');
-const mongoose = require('mongoose');
 const Session = require('./models/Session');
 
+const PORT = process.env.PORT || 4000;
 const server = http.createServer(app);
 
-// ... baaki socket config ...
+// Socket.io Config
+const io = new Server(server, {
+  cors: { origin: allowedOrigins, methods: ['GET', 'POST'] },
+  pingTimeout: 30000,
+  pingInterval: 10000,
+});
 
-// 2. Health Route (Ab 'app' define ho chuka hai upar)
+// Routes - Inhe server.listen se PEHLE hona chahiye
 app.get('/health', (req, res) => {
   res.status(200).json({
     status: "ok",
@@ -22,18 +28,24 @@ app.get('/health', (req, res) => {
   });
 });
 
-// 3. Test DB Route
 app.get("/test-db", async (req, res) => {
   try {
     const testEntry = await Session.create({
-      userId: "test_user_sumit",
+      userId: "test_user_" + Date.now(),
       socketId: "test_socket_123",
       consent: true
     });
-    res.json({ success: true, data: testEntry });
+    res.json({ success: true, message: "DB Entry Created!", data: testEntry });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
 });
 
-// ... baaki server.listen code ...
+// Connections
+connectDB();
+initializeSocket(io);
+
+// Start Server
+server.listen(PORT, () => {
+  console.log(`🚀 Neontalk signaling server on port ${PORT}`);
+});
