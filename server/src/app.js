@@ -25,4 +25,8 @@ app.use(express.json());
 // Routes
 app.use('/', healthRoutes);
 
+app.get("/health", (req, res) => {
+  res.send("ok");
+});
+
 module.exports = { app, allowedOrigins };

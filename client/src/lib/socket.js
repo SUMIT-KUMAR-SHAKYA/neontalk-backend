@@ -3,9 +3,7 @@
  */
 import { io } from 'socket.io-client';
 
-const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:4000';
-
-export const socket = io(SERVER_URL, {
-  autoConnect: false,
-  transports: ['websocket', 'polling'],
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "https://neontalk-backend-lcpk.onrender.com";
+export const socket = io(BACKEND_URL, {
+  transports: ["websocket"]
 });
