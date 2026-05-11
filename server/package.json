@@ -1,0 +1,31 @@
+{
+  "name": "neontalk-server",
+  "version": "1.0.0",
+  "description": "Neontalk signaling server — WebRTC + Socket.io",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "dependencies": {
+    "@logtail/node": "^0.5.8",
+    "@logtail/winston": "^0.5.8",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.1",
+    "express-rate-limit": "^8.5.1",
+    "mongoose": "^8.23.1",
+    "socket.io": "^4.8.3",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
